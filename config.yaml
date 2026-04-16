@@ -1,0 +1,33 @@
+# =============================================
+# Knowledge Distillation Config
+# Teacher: DeepSeek API
+# Student: Hugging Face small model
+# =============================================
+
+deepseek:
+  api_key: "YOUR_DEEPSEEK_API_KEY"          # DeepSeek APIキー
+  base_url: "https://api.deepseek.com"
+  model: "deepseek-chat"                     # または "deepseek-reasoner"
+  temperature: 1.0                           # ソフトラベル生成には高めの温度推奨
+  max_tokens: 512
+
+student:
+  model_name: "rinna/japanese-gpt2-medium"  # 学生モデル（日本語GPT-2例）
+  # model_name: "cyberagent/open-calm-small" # 他の選択肢
+  output_dir: "./student_model"
+  max_length: 256
+
+distillation:
+  temperature: 4.0          # 蒸留温度 T（大きいほどソフトなラベル）
+  alpha: 0.7                # KLDivLoss の重み (1-alpha がCELossの重み)
+  batch_size: 8
+  num_epochs: 3
+  learning_rate: 5.0e-5
+  warmup_steps: 100
+  save_steps: 500
+  logging_steps: 50
+
+dataset:
+  input_file: "./data/prompts.jsonl"         # プロンプト一覧 (jsonl形式)
+  output_file: "./data/distillation_data.jsonl"  # 収集したデータ保存先
+  max_samples: 1000
